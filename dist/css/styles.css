@@ -260,6 +260,7 @@ section {
   display: flex;
   padding: 10px;
   min-width: 100px;
+  font-weight: 500;
 }
 
 .weather-details-card .icon-left {
