@@ -5,7 +5,7 @@ const searchLocation = async (searchTerm) => {
     `http://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${searchTerm}`
   );
 
-  const locations = response.json();
+  const locations = await response.json();
   displayLocations(locations);
 };
 
@@ -25,22 +25,30 @@ const displayLocations = (locations) => {
     const locationElement = document.createElement("div");
     locationElement.classList.add("location-option");
     locationElement.innerHTML = `
-    <h3>${location.name}, ${location.region}</h3>
+    <h3>${location.name}</h3>
     <p>${location.country}</p>
     `;
 
     locationsContainer.append(locationElement);
     locationElement.addEventListener("click", () => {
-      selectLocation(
-        `${location.name}, ${location.region}, ${location.country}`
-      );
+      selectLocation(`${location.name}, ${location.country}`, location.url);
     });
   });
 };
 
-const selectLocation = async (location) => {
-  searchLocationInput.value = location;
+const selectLocation = (locationName, locationUrl) => {
+  searchLocationInput.value = locationName;
   locationsContainer.innerHTML = "";
+  getCurrentWeather(locationUrl);
+};
+
+const getCurrentWeather = async (locationUrl) => {
+  const response = await fetch(
+    `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${locationUrl}`
+  );
+  const weather = await response.json();
+  console.log(weather);
+  return weather;
 };
 
 const clearSearchButton = document.querySelector(".clear-search-button");
