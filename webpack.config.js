@@ -6,5 +6,5 @@ module.exports = {
     filename: "main.js", // Output file name
     path: path.resolve(__dirname, "dist/js"), // Output directory
   },
-  mode: "production", // Set the mode to development or production
+  mode: "development", // Set the mode to development or production
 };
