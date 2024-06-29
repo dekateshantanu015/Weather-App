@@ -4,7 +4,7 @@ const apiKey = "41119eb11ea346c2bba55453240706";
 
 const searchLocation = async (searchTerm) => {
   const response = await fetch(
-    `http://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${searchTerm}`
+    `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${searchTerm}`
   );
   const locations = await response.json();
   displayLocations(locations);
@@ -44,7 +44,7 @@ const selectLocation = (locationName, locationUrl) => {
 
 const getCurrentWeather = async (locationUrl) => {
   const response = await fetch(
-    `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${locationUrl}`
+    `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${locationUrl}`
   );
   const weather = await response.json();
   updateCurrentWeather(weather);
@@ -87,7 +87,7 @@ const getForecastWeather = async (
   alerts = "yes"
 ) => {
   const response = await fetch(
-    `http://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${locationUrl}&days=${days}&aqi=${airQuality}&alerts=${alerts}`
+    `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${locationUrl}&days=${days}&aqi=${airQuality}&alerts=${alerts}`
   );
   const forecast = await response.json();
   updateGeneralForecast(forecast);

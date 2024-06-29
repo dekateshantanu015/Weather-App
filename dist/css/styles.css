@@ -178,9 +178,10 @@ section {
 }
 
 #weather-status-icon {
+  max-height: 100%;
+  width: 200px;
   user-select: none;
   -webkit-user-drag: none;
-  max-height: 100%;
 }
 
 .temperature-container {
@@ -349,6 +350,7 @@ section {
 
 .icon-container img {
   max-height: 100%;
+  width: 90px;
 }
 
 .week-details-container {
