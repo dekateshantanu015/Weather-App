@@ -2,6 +2,21 @@ import { getHours, format } from "date-fns";
 
 const apiKey = "41119eb11ea346c2bba55453240706";
 
+const fixScroll = (bool) => {
+  const body = document.querySelector("body");
+  if (bool) {
+    body.style.position = "fixed";
+    body.style.top = `-${window.scrollY}px`;
+    body.style.width = "100%";
+    body.style.height = "100%";
+  } else {
+    body.style.position = "";
+    body.style.top = "";
+    body.style.width = "";
+    body.style.height = "";
+  }
+};
+
 const searchLocation = async (searchTerm) => {
   const response = await fetch(
     `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${searchTerm}`
@@ -42,7 +57,7 @@ const displayLocations = (locations) => {
 };
 
 const loadingScreen = document.querySelector(".loader");
-
+fixScroll(true);
 const selectLocation = (locationName, locationUrl) => {
   const currentLocationInput = document.querySelector(".current-location");
   currentLocationInput.value = locationName;
@@ -64,6 +79,7 @@ const getCurrentWeather = async (locationUrl) => {
   updateCurrentWeather(weather);
   updateCurrentWeatherIcon(weather);
   loadingScreen.classList.add("hide");
+  fixScroll(false);
   return weather;
 };
 
@@ -385,12 +401,14 @@ const locationModal = document.querySelector(".location-modal-container");
 const locationSelectorButton = document.querySelector(".location-selector");
 const handleLocationSelectorClick = () => {
   locationModal.classList.toggle("hide");
+  fixScroll(true);
 };
 locationSelectorButton.addEventListener("click", handleLocationSelectorClick);
 
 const closeModalButton = document.querySelector(".close-location-modal-button");
 const handleLocationModalClose = () => {
   locationModal.classList.add("hide");
+  fixScroll(false);
 };
 closeModalButton.addEventListener("click", handleLocationModalClose);
 window.addEventListener("click", (e) => {
