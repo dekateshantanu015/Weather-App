@@ -440,6 +440,9 @@ const renderSavedLocations = () => {
         deleteSavedLocation(index);
       });
       savedLocationsContainer.appendChild(savedLocation);
+      savedLocation.addEventListener("click", () => {
+        selectLocation(location, location);
+      });
     });
   } else {
     const savedLocation = document.createElement("div");
