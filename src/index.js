@@ -1,6 +1,6 @@
-const apiKey = "41119eb11ea346c2bba55453240706";
-
 import { getHours, format } from "date-fns";
+
+const apiKey = "41119eb11ea346c2bba55453240706";
 
 const searchLocation = async (searchTerm) => {
   const response = await fetch(
@@ -98,7 +98,6 @@ const updateCurrentWeather = async (weather) => {
     wind_kph,
     wind_mph,
   } = weather.current;
-
   temperature.innerHTML = `${tempUnit === "celcius" ? temp_c : temp_f}°`;
   weatherDescription.innerHTML = condition.text;
   feelsLike.innerHTML = `Feels like ${
@@ -375,7 +374,6 @@ const changeThemeButton = document.querySelector(".theme-selector");
 changeThemeButton.addEventListener("click", handleThemeNameClick);
 
 updateSettings();
-
 if (!defaultLocation) {
   selectLocation("San Jose, CR", "San Jose, CR");
 } else {

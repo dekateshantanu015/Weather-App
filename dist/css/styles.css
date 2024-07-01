@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600;700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap");
 
 * {
   padding: 0;
@@ -116,9 +116,11 @@ section {
   border: none;
   background: #ffff;
   color: var(--text);
+
   font-size: 0.9em;
   padding: 15px;
   padding-left: 20px;
+
   width: 100%;
 }
 
@@ -347,8 +349,8 @@ section {
 .week-card {
   background: var(--grey-200);
   border-radius: 10px;
-  padding: 10px;
   display: flex;
+  padding: 10px;
 }
 
 .icon-container {
@@ -457,7 +459,7 @@ section {
   padding: 0px 10px;
 }
 
-//utility classes
+/* Utility clases */
 .show {
   display: block;
 }
