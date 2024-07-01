@@ -1,8 +1,6 @@
-import { getHours } from "date-fns";
-
-const tempUnit = localStorage.getItem("tempUnit") || "celcius";
-
 const apiKey = "41119eb11ea346c2bba55453240706";
+
+import { getHours, format } from "date-fns";
 
 const searchLocation = async (searchTerm) => {
   const response = await fetch(
@@ -47,7 +45,6 @@ const selectLocation = (locationName, locationUrl) => {
   searchLocationInput.value = locationName;
   locationsContainer.innerHTML = "";
   locationsContainer.classList.remove("show");
-  Text;
   getCurrentWeather(locationUrl);
   getForecastWeather(locationUrl);
 };
@@ -83,7 +80,7 @@ const updateCurrentWeatherIcon = (weather) => {
 };
 
 const updateCurrentWeather = async (weather) => {
-  console.log(weather);
+  const tempUnit = localStorage.getItem("tempUnit");
   const { temp_c, temp_f, condition, pressure_mb, feelslike_c, feelslike_f } =
     weather.current;
   temperature.innerHTML = `${tempUnit === "celcius" ? temp_c : temp_f}°`;
@@ -105,6 +102,8 @@ const getForecastWeather = async (
   );
   const forecast = await response.json();
   updateGeneralForecast(forecast);
+  updateHourlyForecast(forecast);
+  updateWeekForecast(forecast);
 };
 
 const minTemp = document.getElementById("min-temp");
@@ -118,9 +117,18 @@ const humidity = document.getElementById("humidity");
 const gusts = document.getElementById("gusts");
 
 const updateGeneralForecast = (forecast) => {
+  const tempUnit = localStorage.getItem("tempUnit");
   const currentDayForecast = forecast.forecast.forecastday[0];
-  minTemp.innerHTML = `${currentDayForecast.day.mintemp_c}°`;
-  maxTemp.innerHTML = `${currentDayForecast.day.maxtemp_c}°`;
+  minTemp.innerHTML = `${
+    tempUnit === "celcius"
+      ? currentDayForecast.day.mintemp_c
+      : currentDayForecast.day.mintemp_f
+  }°`;
+  maxTemp.innerHTML = `${
+    tempUnit === "celcius"
+      ? currentDayForecast.day.maxtemp_c
+      : currentDayForecast.day.maxtemp_f
+  }°`;
   chanceOfRain.innerHTML = `${currentDayForecast.day.daily_chance_of_rain}%`;
   wind.innerHTML = `${currentDayForecast.day.maxwind_kph} km/h`;
   sunrise.innerHTML = `${currentDayForecast.astro.sunrise}`;
@@ -128,7 +136,6 @@ const updateGeneralForecast = (forecast) => {
   uvIndex.innerHTML = `${currentDayForecast.day.uv}`;
   humidity.innerHTML = `${currentDayForecast.day.avghumidity}%`;
   gusts.innerHTML = `${currentDayForecast.day.maxwind_kph} km/h`;
-  updateHourlyForecast(forecast);
 };
 
 const hourlyForecastContainer = document.querySelector(
@@ -179,9 +186,9 @@ const updateHourlyForecast = (weather) => {
 
 const weekForecastContainer = document.querySelector(".week-cards-container");
 const updateWeekForecast = (weather) => {
+  const tempUnit = localStorage.getItem("tempUnit");
   weekForecastContainer.innerHTML = "";
-  const { forecastDay } = weather.forecast;
-
+  const { forecastday } = weather.forecast;
   forecastday.forEach((day) => {
     const weekCard = document.createElement("div");
     weekCard.classList.add("week-card");
@@ -210,7 +217,9 @@ const updateWeekForecast = (weather) => {
     min.classList.add("min");
     const minTemp = document.createElement("p");
     minTemp.classList.add("temp");
-    minTemp.innerHTML = `${day.day.mintemp_c}°`;
+    minTemp.innerHTML = `${
+      tempUnit === "celcius" ? day.day.mintemp_c : day.day.mintemp_f
+    }°`;
     const minTempLabel = document.createElement("p");
     minTempLabel.classList.add("temp-label");
     minTempLabel.innerHTML = "min";
@@ -220,7 +229,9 @@ const updateWeekForecast = (weather) => {
     max.classList.add("max");
     const maxTemp = document.createElement("p");
     maxTemp.classList.add("temp");
-    maxTemp.innerHTML = `${day.day.maxtemp_c}°`;
+    maxTemp.innerHTML = `${
+      tempUnit === "celcius" ? day.day.maxtemp_c : day.day.maxtemp_f
+    }°`;
     const maxTempLabel = document.createElement("p");
     maxTempLabel.classList.add("temp-label");
     maxTempLabel.innerHTML = "max";
@@ -243,23 +254,48 @@ const handleConfigButtonClick = () => {
 const configButton = document.querySelector(".config-button");
 configButton.addEventListener("click", handleConfigButtonClick);
 
+// Settings placeholders
 const tempUnitText = document.querySelector(".temp-unit");
 const speedUnitText = document.querySelector(".speed-unit");
 const themeNameText = document.querySelector(".theme-name");
 const defaultLocationText = document.querySelector(".default-location");
 
+// Getting default values
+const tempUnit = localStorage.getItem("tempUnit")
+  ? localStorage.getItem("tempUnit")
+  : localStorage.setItem("tempUnit", "celcius");
+
+const speedUnit = localStorage.getItem("speedUnit")
+  ? localStorage.getItem("speedUnit")
+  : localStorage.setItem("speedUnit", "km/h");
+
+const themeName = localStorage.getItem("themeName")
+  ? localStorage.getItem("themeName")
+  : localStorage.setItem("themeName", "light");
+
+const defaultLocation = localStorage.getItem("defaultLocation")
+  ? localStorage.getItem("defaultLocation")
+  : localStorage.setItem("defaultLocation", "San Jose, CR");
+
 const updateSettings = () => {
   tempUnitText.innerHTML = localStorage.getItem("tempUnit") || "celcius";
   speedUnitText.innerHTML = localStorage.getItem("speedUnit") || "km/h";
-  themeNameText.innerHTML = localStorage.getItem("themeName") || "Light";
+  themeNameText.innerHTML = localStorage.getItem("themeName") || "light";
   defaultLocationText.innerHTML =
     localStorage.getItem("defaultLocation") || "San Jose";
+  selectLocation(defaultLocation, defaultLocation);
+};
+
+const handleTempUnitClick = () => {
+  const unit = document.querySelector(".temp-unit").innerHTML;
+  unit === "celcius" ? selectTempUnit("fahrenheit") : selectTempUnit("celcius");
+};
+const tempUnitSelector = document.querySelector(".temp-unit-selector");
+tempUnitSelector.addEventListener("click", handleTempUnitClick);
+
+const selectTempUnit = (unit) => {
+  localStorage.setItem("tempUnit", unit);
+  updateSettings();
 };
 
 updateSettings();
-
-const defaultLocation =
-  localStorage.getItem("defaultLocation") || "San Jose, CR";
-if (defaultLocation) {
-  selectLocation(defaultLocation, defaultLocation);
-}
