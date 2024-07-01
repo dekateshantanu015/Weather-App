@@ -42,6 +42,8 @@ const displayLocations = (locations) => {
 };
 
 const selectLocation = (locationName, locationUrl) => {
+  const currentLocationInput = document.querySelector(".current-location");
+  currentLocationInput.value = locationName;
   searchLocationInput.value = locationName;
   locationsContainer.innerHTML = "";
   locationsContainer.classList.remove("show");
@@ -59,6 +61,7 @@ const getCurrentWeather = async (locationUrl) => {
   const weather = await response.json();
   updateCurrentWeather(weather);
   updateCurrentWeatherIcon(weather);
+  loadingScreen.classList.add("hide");
   return weather;
 };
 
@@ -275,7 +278,6 @@ configButton.addEventListener("click", handleConfigButtonClick);
 const tempUnitText = document.querySelector(".temp-unit");
 const speedUnitText = document.querySelector(".speed-unit");
 const themeNameText = document.querySelector(".theme-name");
-const defaultLocationText = document.querySelector(".default-location");
 
 // Getting default values
 const tempUnit = localStorage.getItem("tempUnit")
@@ -302,9 +304,13 @@ const updateSettings = () => {
   tempUnitText.innerHTML = localStorage.getItem("tempUnit") || "celcius";
   speedUnitText.innerHTML = localStorage.getItem("speedUnit") || "km/h";
   themeNameText.innerHTML = localStorage.getItem("themeName") || "light";
-  defaultLocationText.innerHTML =
-    localStorage.getItem("defaultLocation") || "San Jose, CR";
   const themeName = localStorage.getItem("themeName");
+
+  const pinnedLocation = document.querySelector(".pinned-location");
+  pinnedLocation.value = localStorage.getItem("defaultLocation");
+  const currentLocationInput = document.querySelector(".current-location");
+  currentLocationInput.value = localStorage.getItem("currentLocation");
+  renderSavedLocations();
   selectTheme(themeName);
 };
 
@@ -372,6 +378,97 @@ const handleThemeNameClick = () => {
 
 const changeThemeButton = document.querySelector(".theme-selector");
 changeThemeButton.addEventListener("click", handleThemeNameClick);
+
+const locationModal = document.querySelector(".location-modal-container");
+const locationSelectorButton = document.querySelector(".location-selector");
+const handleLocationSelectorClick = () => {
+  locationModal.classList.toggle("hide");
+};
+locationSelectorButton.addEventListener("click", handleLocationSelectorClick);
+
+const closeModalButton = document.querySelector(".close-location-modal-button");
+const handleLocationModalClose = () => {
+  locationModal.classList.add("hide");
+};
+closeModalButton.addEventListener("click", handleLocationModalClose);
+window.addEventListener("click", (e) => {
+  if (e.target === locationModal) {
+    handleLocationModalClose();
+  }
+});
+
+const removeLocationSvg = `<svg color="#445353"
+	fill="currentColor"
+	class="remove-saved-location-button"
+	aria-hidden="true"
+	width="20"
+	height="20"
+	viewBox="0 0 20 20"
+	xmlns="http://www.w3.org/2000/svg">
+	<path
+	d="M10 2a8 8 0 110 16 8 8 0 010-16zM7.8 7.11a.5.5 0 00-.63.06l-.06.07a.5.5 0 00.06.64L9.3 10l-2.12 2.12-.06.07a.5.5 0 00.06.64l.07.06c.2.13.47.11.64-.06L10 10.7l2.12 2.12.07.06c.2.13.46.11.64-.06l.06-.07a.5.5 0 00-.06-.64L10.7 10l2.12-2.12.06-.07a.5.5 0 00-.06-.64l-.07-.06a.5.5 0 00-.64.06L10 9.3 7.88 7.17l-.07-.06z"
+	fill="currentColor"></path>
+</svg>`;
+
+const saveLocationButton = document.querySelector(".save-location-button");
+const handleSaveLocationClick = () => {
+  const savedLocations =
+    JSON.parse(localStorage.getItem("savedLocations")) || [];
+  const currentLocation = document.querySelector(".current-location");
+  savedLocations.push(currentLocation.value);
+  localStorage.setItem("savedLocations", JSON.stringify(savedLocations));
+  renderSavedLocations();
+};
+saveLocationButton.addEventListener("click", handleSaveLocationClick);
+const renderSavedLocations = () => {
+  const savedLocations =
+    JSON.parse(localStorage.getItem("savedLocations")) || [];
+  const savedLocationsContainer = document.querySelector(
+    ".saved-locations-container"
+  );
+  savedLocationsContainer.innerHTML = "";
+  if (savedLocations.length !== 0) {
+    savedLocations.forEach((location, index) => {
+      const savedLocation = document.createElement("div");
+      savedLocation.classList.add("saved-location");
+      const savedLocationText = document.createElement("p");
+      savedLocationText.innerHTML = location;
+      savedLocation.appendChild(savedLocationText);
+      savedLocation.innerHTML += removeLocationSvg;
+      const removeButton = savedLocation.querySelector("svg");
+      removeButton.addEventListener("click", () => {
+        deleteSavedLocation(index);
+      });
+      savedLocationsContainer.appendChild(savedLocation);
+    });
+  } else {
+    const savedLocation = document.createElement("div");
+    savedLocation.classList.add("saved-location", "text-center");
+    const savedLocationText = document.createElement("p");
+    savedLocationText.innerHTML = "No saved locations...";
+    savedLocation.appendChild(savedLocationText);
+    savedLocationsContainer.appendChild(savedLocation);
+  }
+};
+
+const deleteSavedLocation = (index) => {
+  const savedLocations = JSON.parse(localStorage.getItem("savedLocations"));
+  savedLocations.splice(index, 1);
+  localStorage.setItem("savedLocations", JSON.stringify(savedLocations));
+  renderSavedLocations();
+};
+
+const setDefaultLocationButton = document.querySelector(
+  ".set-default-location-button"
+);
+const handlePinLocationClick = () => {
+  const pinnedLocation = document.querySelector(".pinned-location");
+  const currentLocation = document.querySelector(".current-location");
+  localStorage.setItem("defaultLocation", currentLocation.value);
+  pinnedLocation.value = localStorage.getItem("defaultLocation");
+  localStorage.setItem("defaultLocation", pinnedLocation.value);
+};
+setDefaultLocationButton.addEventListener("click", handlePinLocationClick);
 
 updateSettings();
 if (!defaultLocation) {
