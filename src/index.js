@@ -1,5 +1,7 @@
 import { getHours } from "date-fns";
 
+const tempUnit = localStorage.getItem("tempUnit") || "celcius";
+
 const apiKey = "41119eb11ea346c2bba55453240706";
 
 const searchLocation = async (searchTerm) => {
@@ -81,10 +83,14 @@ const updateCurrentWeatherIcon = (weather) => {
 };
 
 const updateCurrentWeather = async (weather) => {
-  const { temp_c, condition, pressure_mb } = weather.current;
-  temperature.innerHTML = `${temp_c}°`;
+  console.log(weather);
+  const { temp_c, temp_f, condition, pressure_mb, feelslike_c, feelslike_f } =
+    weather.current;
+  temperature.innerHTML = `${tempUnit === "celcius" ? temp_c : temp_f}°`;
   weatherDescription.innerHTML = condition.text;
-  feelsLike.innerHTML = `Feels like ${weather.current.feelslike_c}°`;
+  feelsLike.innerHTML = `Feels like ${
+    tempUnit === "celcius" ? feelslike_c : feelslike_f
+  }°`;
   pressure.innerHTML = `${pressure_mb} mb`;
 };
 
@@ -243,7 +249,7 @@ const themeNameText = document.querySelector(".theme-name");
 const defaultLocationText = document.querySelector(".default-location");
 
 const updateSettings = () => {
-  tempUnitText.innerHTML = localStorage.getItem("tempUnit") || "Celcius";
+  tempUnitText.innerHTML = localStorage.getItem("tempUnit") || "celcius";
   speedUnitText.innerHTML = localStorage.getItem("speedUnit") || "km/h";
   themeNameText.innerHTML = localStorage.getItem("themeName") || "Light";
   defaultLocationText.innerHTML =
