@@ -457,10 +457,6 @@ section {
   padding: 0px 10px;
 }
 
-.speed-unit {
-  padding-left: 12px !important;
-}
-
 //utility classes
 .show {
   display: block;
