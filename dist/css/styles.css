@@ -466,6 +466,75 @@ section {
   display: none;
 }
 
+/* Dark Mode */
+
+body.dark-theme {
+  background: #242424;
+  color: #fafafa;
+}
+
+body.dark-theme .light-text {
+  color: #d2d2d2;
+}
+
+body.dark-theme .search-location-input {
+  background: #373737;
+  color: #fafafa;
+}
+
+body.dark-theme .hourly-card,
+body.dark-theme .week-card {
+  background: #373737;
+}
+
+body.dark-theme .temp-label {
+  color: #b0afaf;
+}
+
+body.dark-theme .temp-sensation {
+  color: #b0afaf;
+}
+
+body.dark-theme .location-option {
+  background: #373737;
+}
+
+body.dark-theme .location-option p {
+  color: #cacaca;
+}
+
+body.dark-theme .location-option h3 {
+  color: #fafafa;
+}
+
+body.dark-theme .config-button {
+  background: #373737;
+}
+
+body.dark-theme .config-icon {
+  color: #fafafa;
+}
+
+body.dark-theme .setting-box {
+  background: #2c2c2c;
+}
+
+body.dark-theme .setting-box button {
+  background: #2c2c2c;
+}
+
+body.dark-theme .setting-box button:hover {
+  background: #272727;
+}
+
+body.dark-theme .min-max svg {
+  color: #fafafa;
+}
+
+body.dark-theme .clear-search-button {
+  color: #b0afaf;
+}
+
 /* Responsiveness */
 @media screen and (max-width: 1060px) {
   .week-cards-container {
